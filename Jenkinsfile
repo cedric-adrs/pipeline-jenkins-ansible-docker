@@ -42,7 +42,7 @@ pipeline {
       
                 ansiblePlaybook(credentialsId: 'ssh-key-for-server-staging', 
                                   inventory:  "$WORKSPACE/config-as-code/ansible/hosts", 
-                                  playbook: 'ansible/playbook-deploy-staging.yaml')          
+                                  playbook: '$WORKSPACE/config-as-code/ansible/playbook-deploy-staging.yaml')          
             } 
         }
     }
