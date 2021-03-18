@@ -8,21 +8,12 @@ pipeline {
 
     stages {
 
-        // Start SonarQube Server
-        stage("Start SonarQube Server"){
-            steps{
-                echo "====++++  Start SonarQube Server ++++===="
-                
-                sh " sudo docker run -d --add-host=host.docker.internal:172.17.0.1 --name my-sonarqube -p 9000:9000 sonarqube:lts"                    
-                
-            }
-        }
-
+       
       // Clone from Git
         stage("Clone App from Git"){
             steps{
                 echo "====++++  Clone App from Git ++++===="
-                git branch:"master", url: "https://github.com/mromdhani/challenge-09-ci-cd-jenkins-ansible.git"
+                git branch:"master", url: "https://github.com/cedric-adrs/pipeline-jenkins-ansible-docker"
             }          
         }
         // Build and Unit Test (Maven/JUnit)
@@ -56,14 +47,5 @@ pipeline {
                                   playbook: 'ansible/playbook-deploy-staging.yaml')          
             } 
         }
-
-
-         // Stop SonarQube Server
-        stage("Stop SonarQube Server"){
-            steps{
-                echo "====++++  Stop SonarQube Server ++++===="
-                sh "sudo docker stop my-sonarqube && sudo docker rm my-sonarqube" 
-            }          
-        }        
     }
 }
