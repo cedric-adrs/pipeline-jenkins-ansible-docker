@@ -5,22 +5,20 @@ pipeline {
         maven "my-maven"
     }
 
-
     stages {
 
-       
-      // Clone from Git
+        // Clone from Git
         stage("Clone App from Git"){
             steps{
                 echo "====++++  Clone App from Git ++++===="
-                git branch:"master", url: "https://github.com/cedric-adrs/pipeline-jenkins-ansible-docker"
+                git branch:"master", url: "https://github.com/mromdhani/pipeline-jenkins-ansible-docker.git"
             }          
         }
         // Build and Unit Test (Maven/JUnit)
         stage("Build and Package"){
             steps{
                 echo "====++++  Build and Unit Test (Maven/JUnit) ++++===="
-                sh "mvn clean package"
+                sh "mvn -f greetings-app/pom.xml clean package"
             }           
         }  
 
@@ -29,7 +27,7 @@ pipeline {
             steps{
                 echo "====++++  Static Code Analysis (SonarQube) ++++===="                
           //      withSonarQubeEnv('my_sonarqube_in_docker') {  
-                sh "mvn clean package clean package -Dsurefire.skip=true sonar:sonar -Dsonar.host.url=http://localhost:9000   -Dsonar.projectName=Pipeline Pipeline-jenkins-ansible-docker -Dsonar.projectVersion=$BUILD_NUMBER";
+                sh "mvn -f greetings-app/pom.xml clean package clean package -Dsurefire.skip=true sonar:sonar -Dsonar.host.url=http://localhost:9000   -Dsonar.projectName=Pipeline-jenkins-ansible-docker -Dsonar.projectVersion=$BUILD_NUMBER";
              
            //     }  
             }           
@@ -42,8 +40,8 @@ pipeline {
                 
                 echo "====++++  Deploy WAR on staging using Ansible ++++===="
       
-                ansiblePlaybook(credentialsId: 'ssh-on-server-staging', 
-                                  inventory:  "$WORKSPACE/ansible/hosts", 
+                ansiblePlaybook(credentialsId: 'ssh-key-for-server-staging', 
+                                  inventory:  "$WORKSPACE/config-as-code/ansible/hosts", 
                                   playbook: 'ansible/playbook-deploy-staging.yaml')          
             } 
         }
