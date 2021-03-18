@@ -29,7 +29,7 @@ pipeline {
             steps{
                 echo "====++++  Static Code Analysis (SonarQube) ++++===="                
           //      withSonarQubeEnv('my_sonarqube_in_docker') {  
-                sh "mvn clean package clean package -Dsurefire.skip=true sonar:sonar -Dsonar.host.url=http://172.17.0.1:9000   -Dsonar.projectName=Pipeline Pipeline-jenkins-ansible-docker -Dsonar.projectVersion=$BUILD_NUMBER";
+                sh "mvn clean package clean package -Dsurefire.skip=true sonar:sonar -Dsonar.host.url=http://localhost:9000   -Dsonar.projectName=Pipeline Pipeline-jenkins-ansible-docker -Dsonar.projectVersion=$BUILD_NUMBER";
              
            //     }  
             }           
